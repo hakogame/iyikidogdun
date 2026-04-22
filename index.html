@@ -358,8 +358,8 @@ text-align:center;
 
 <canvas id="particleCanvas"></canvas>
 
-<audio id="voice">
-    <source src="sesim.m4a" type="audio/mpeg">
+<audio id="loveSound" preload="auto">
+    <source src="oyunses.m4a" type="audio/mp4">
 </audio>
 
 <audio id="song">
@@ -636,7 +636,15 @@ function blowCandles(){
 blowSound.pause();
 blowSound.currentTime = 0;
 }
+document.body.addEventListener("touchstart", unlockAudio, { once:true });
 
+function unlockAudio(){
+    const a = document.getElementById("loveSound");
+    a.play().then(()=>{
+        a.pause();
+        a.currentTime = 0;
+    }).catch(()=>{});
+}
 </script>
 
 </body>
