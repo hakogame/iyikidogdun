@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>İyi ki Doğdun ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0b0b0f;
+    color: white;
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* yıldız */
+.stars {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: fall 8s linear infinite;
+}
+
+@keyframes fall {
+    from { transform: translateY(0); }
+    to { transform: translateY(100vh); }
+}
+
+/* container */
+.container {
+    position: relative;
+    z-index: 1;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    padding: 20px;
+}
+
+/* player */
+.player {
+    margin: 20px auto;
+    width: 320px;
+    background: #181818;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.player button {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* screen */
+#playerScreen {
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#121212;
+    z-index:999;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+/* cover */
+#cover {
+    width:280px;
+    height:280px;
+    object-fit:cover;
+    border-radius:20px;
+    margin-bottom:20px;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* ❤️ kalp */
+#heartBeat{
+    position:absolute;
+    top:20px;
+    font-size:60px;
+    opacity:0.9;
+    transition: transform 0.15s ease;
+}
+
+/* text */
+h1 { font-size: 24px; }
+p { font-size: 14px; color:#bbb; }
+
+/* button */
+button {
+    padding: 12px 20px;
+    border:none;
+    border-radius:50px;
+    background:#1db954;
+    color:white;
+    cursor:pointer;
+}
+
+/* slider */
+input[type=range] {
+    width: 100%;
+    margin-top: 15px;
+}
+
+#time {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 5px;
+}
+
+.hidden { display:none; }
+
+/* canvas */
+#particleCanvas{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:9999;
+}
+
+#cakeImg{
+    transition: transform 0.4s ease;
+}
+
+.holdBtn {
+    position: relative;
+    width: 220px;
+    height: 50px;
+    border-radius: 50px;
+    background: #222;
+    overflow: hidden;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+#holdFill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ff4d6d, #1db954);
+    transition: width 0.1s linear;
+}
+
+#holdText {
+    position: relative;
+    z-index: 2;
+    color: white;
+    line-height: 50px;
+    text-align: center;
+    display: block;
+}
+
+.cake{
+    width:220px;
+    height:140px;
+    background:linear-gradient(145deg,#ff758c,#ff4d6d);
+    border-radius:20px;
+    position:relative;
+    box-shadow:0 20px 40px rgba(0,0,0,0.6);
+
+    /* 🔥 CENTER FIX */
+    margin:0 auto;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+#cakeScreen{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#000;
+    z-index:10000;
+
+    display:flex;              /* 🔥 EKLENDİ */
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    text-align:center;
+}
+
+/* üst krema */
+.cake::before{
+    content:"";
+    position:absolute;
+    top:-25px;
+    width:100%;
+    height:50px;
+    background:radial-gradient(circle at 50% 30%, #fff, #f1f1f1);
+    border-radius:30px;
+}
+
+/* mumlar */
+.candles{
+    position:absolute;
+    top:-55px;
+    width:100%;
+    display:flex;
+    justify-content:space-around;
+}
+
+.candle{
+    width:8px;
+    height:40px;
+    background:#fff;
+    border-radius:5px;
+    position:relative;
+}
+
+.flame{
+    width:10px;
+    height:15px;
+    background:orange;
+    border-radius:50%;
+    position:absolute;
+    top:-18px;
+    left:50%;
+    transform:translateX(-50%);
+    animation:flicker 0.2s infinite alternate;
+}
+
+@keyframes flicker{
+    from{transform:translateX(-50%) scale(1); opacity:1;}
+    to{transform:translateX(-50%) scale(1.3); opacity:0.6;}
+}
+
+#cakeScreen > *{
+    z-index:2;
+}
+
+#continueBtn{
+    margin-top:20px;
+    padding:14px 24px;
+    font-size:16px;
+    background:#1db954;
+    border:none;
+    border-radius:50px;
+    color:white;
+    cursor:pointer;
+    display:none;
+}
+.cakeWrapper{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="container">
+
+    <h1>İyi ki doğdun sevgilim ❤️</h1>
+    <p>Bir daha dünyaya gelsem yine seni severdim. Sadece 6 yıl değil bir ömür birlikte olmak dileğiyle...</p>
+
+    <div class="player">
+
+        <button onclick="startExperience()">▶ Mesajı Başlat</button>
+
+        <input type="range" id="voiceProgress" value="0" min="0" max="100">
+        <div id="voiceTime" style="font-size:12px; color:#aaa;"></div>
+
+        <div id="songBtn" class="hidden">
+            <button onclick="playSong()">🎶 Şarkıyı Başlat</button>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- SCREEN -->
+<div id="playerScreen">
+
+    <div id="heartBeat">❤️</div>
+
+    <img id="cover" src="1.png">
+
+    <h2>İyi ki doğdun ❤️</h2>
+
+    <input type="range" id="progress" value="0" min="0" max="100">
+    <div id="time">0:00 / 0:00</div>
+
+    <button onclick="togglePlay()" id="playBtn">⏸ Duraklat</button>
+
+</div>
+
+<!-- 🎂 CAKE SCREEN -->
+<div id="cakeScreen" style="
+display:none;
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:#000;
+z-index:10000;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+text-align:center;
+">
+
+    <h2>🎂 Ama şarkımızdan önce bir dilek tutup pastayı üfle!</h2> <br><br><br><br>
+
+   <div class="cakeWrapper">
+    <div class="cake">
+    <div class="candles">
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+    </div>
+</div>
+ 
+    <div id="holdBtn" class="holdBtn">
+    <div id="holdFill"></div>
+    <span id="holdText">👇 Butona basılı tut üfle</span>
+</div>
+
+    <button id="continueBtn" style="display:none;" onclick="startSongNow()">
+        🎶 Şimdi şarkımızı dinle
+    </button>
+
+</div>
+   </div>
+</div>
+
+<canvas id="particleCanvas"></canvas>
+
+<audio id="voice">
+    <source src="sesim.m4a" type="audio/mpeg">
+</audio>
+
+<audio id="song">
+    <source src="sarkimiz.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="blowSound" loop>
+    <source src="ufleme.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+/* STARS */
+const stars = document.getElementById("stars");
+for(let i=0;i<70;i++){
+    let s=document.createElement("div");
+    s.classList.add("star");
+    s.style.left=Math.random()*100+"vw";
+    s.style.top=Math.random()*100+"vh";
+    s.style.animationDuration=(Math.random()*5+3)+"s";
+    stars.appendChild(s);
+}
+
+/* AUDIO */
+const voice=document.getElementById("voice");
+const song=document.getElementById("song");
+const voiceProgress=document.getElementById("voiceProgress");
+const voiceTime=document.getElementById("voiceTime");
+
+const progress=document.getElementById("progress");
+const time=document.getElementById("time");
+const cover=document.getElementById("cover");
+document.getElementById("holdBtn").addEventListener("click", blowCandles);
+let photos=["1.png","2.png","3.png","4.png","5.png"];
+let index=0;
+let intervalStarted=false;
+
+/* START */
+function startExperience(){
+    voice.play();
+    voice.onended=()=>{
+        document.getElementById("songBtn").classList.remove("hidden");
+    }
+}
+
+/* VOICE */
+voice.addEventListener("timeupdate",()=>{
+    let p=(voice.currentTime/voice.duration)*100;
+    voiceProgress.value=p||0;
+    voiceTime.innerHTML=format(voice.currentTime)+" / "+format(voice.duration);
+});
+
+voiceProgress.addEventListener("input",()=>{
+    voice.currentTime=(voiceProgress.value/100)*voice.duration;
+});
+
+/* SONG */
+function playSong(){
+    document.getElementById("cakeScreen").style.display="flex";
+}
+
+/* SONG PROGRESS FIX */
+song.addEventListener("timeupdate", () => {
+    let p = (song.currentTime / song.duration) * 100;
+    progress.value = p || 0;
+
+    time.innerHTML = format(song.currentTime) + " / " + format(song.duration);
+});
+
+/* SEEK (ileri geri sarma) */
+progress.addEventListener("input", () => {
+    song.currentTime = (progress.value / 100) * song.duration;
+});
+
+/* PLAY */
+function togglePlay(){
+    if(song.paused){
+        song.play();
+        playBtn.innerHTML="⏸ Duraklat";
+    }else{
+        song.pause();
+        playBtn.innerHTML="▶ Devam";
+    }
+}
+
+/* ❤️ BEAT */
+function startBeat(){
+    setInterval(()=>{
+        if(song.paused) return;
+        let h=document.getElementById("heartBeat");
+        h.style.transform="scale(1.4)";
+        setTimeout(()=>h.style.transform="scale(1)",120);
+    },600);
+}
+
+/* 📸 PHOTOS */
+function startPhotos(){
+    if(intervalStarted) return;
+    intervalStarted=true;
+
+    cover.src=photos[0];
+
+    setInterval(()=>{
+        index++;
+        if(index>=photos.length) index=0;
+
+        cover.style.opacity=0;
+        cover.style.transform="scale(1.05)";
+
+        setTimeout(()=>{
+            cover.src=photos[index];
+            cover.style.opacity=1;
+            cover.style.transform="scale(1)";
+
+            createExplosion(); // 💥
+
+        },400);
+
+    },3500);
+}
+
+/* FORMAT */
+function format(s){
+    let m=Math.floor(s/60);
+    let sec=Math.floor(s%60);
+    return m+":"+(sec<10?"0"+sec:sec);
+}
+
+/* =========================
+   💥 ULTIMATE PARTICLE SYSTEM
+   ========================= */
+
+const canvas=document.getElementById("particleCanvas");
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let particles=[];
+
+/* ❤️ HEART SHAPE + 🎆 CONFETTI MIX */
+function createExplosion(){
+
+    for(let i=0;i<80;i++){
+
+        let t = Math.random()*Math.PI*2;
+
+        // ❤️ heart shape formula
+        let x = 16 * Math.pow(Math.sin(t),3);
+        let y = -(13*Math.cos(t) - 5*Math.cos(2*t)
+                - 2*Math.cos(3*t) - Math.cos(4*t));
+
+        particles.push({
+            x: window.innerWidth/2 + x*10,
+            y: window.innerHeight/2 + y*10,
+            vx:(Math.random()-0.5)*8,
+            vy:(Math.random()-0.5)*8,
+            life:60,
+            color: Math.random()>0.5 ? "#ff4d6d" : "#1db954"
+        });
+    }
+}
+
+/* animate */
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    particles.forEach((p,i)=>{
+        p.x+=p.vx;
+        p.y+=p.vy;
+        p.life--;
+
+        ctx.fillStyle=p.color;
+        ctx.shadowBlur=12;
+        ctx.shadowColor=p.color;
+
+        ctx.fillRect(p.x,p.y,3,3);
+
+        if(p.life<=0) particles.splice(i,1);
+    });
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+let holdInterval;
+let holdProgress = 0;
+let isBlown = false;
+const holdBtn = document.getElementById("holdBtn");
+const holdFill = document.getElementById("holdFill");
+const blowSound = document.getElementById("blowSound");
+
+holdBtn.addEventListener("mousedown", startHold);
+holdBtn.addEventListener("touchstart", startHold);
+
+holdBtn.addEventListener("mouseup", stopHold);
+holdBtn.addEventListener("mouseleave", stopHold);
+holdBtn.addEventListener("touchend", stopHold);
+
+function startHold(){
+    if(isBlown) return; // tekrar çalışmasın
+
+    holdProgress = 0;
+
+    holdInterval = setInterval(()=>{
+
+        holdProgress += 2;
+        holdFill.style.width = holdProgress + "%";
+
+        if(holdProgress >= 100){
+            holdProgress = 100;
+            holdFill.style.width = "100%";
+
+            clearInterval(holdInterval);
+
+            isBlown = true; // 🔥 kilit
+            blowCandles();
+        }
+
+    }, 80);
+
+blowSound.currentTime = 0;
+blowSound.play();
+}
+
+function stopHold(){
+    clearInterval(holdInterval);
+
+    if(!isBlown){ // sadece tamamlanmadıysa sıfırla
+        holdProgress = 0;
+        holdFill.style.width = "0%";
+    }
+
+blowSound.pause();
+blowSound.currentTime = 0;
+}
+
+
+/* GERÇEK ŞARKIYI BAŞLAT */
+function startSongNow(){
+
+    document.getElementById("cakeScreen").style.display="none";
+
+    document.getElementById("playerScreen").style.display="flex";
+
+    song.play();
+    startPhotos();
+    startBeat();
+}
+
+function blowCandles(){
+
+    if(!isBlown) return; // 🔥 %100 olmadan asla çalışmaz
+    // mumları söndür
+    document.querySelector(".candles").innerHTML = "💨💨💨💨💨";
+
+    // pasta efekt
+    document.querySelector(".cake").style.transform = "scale(1.05)";
+
+    createExplosion();
+
+    const btn = document.getElementById("continueBtn");
+
+    // 🔥 EN GARANTİ GÖSTERME YÖNTEMİ
+    btn.style.display = "inline-block";
+    btn.style.position = "relative";
+    btn.style.zIndex = "99999";
+
+    setTimeout(()=>{
+        btn.scrollIntoView({behavior:"smooth", block:"center"});
+    },100);
+
+blowSound.pause();
+blowSound.currentTime = 0;
+}
+
+</script>
+
+</body>
+</html>
