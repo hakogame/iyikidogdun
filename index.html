@@ -13,12 +13,6 @@ body {
     color: white;
     overflow: hidden;
     height: 100vh;
-
-
-    user-select: none;
-    -webkit-user-select: none; /* iOS */
-    -ms-user-select: none;     /* eski tarayıcı */
-
 }
 
 /* yıldız */
@@ -358,8 +352,8 @@ text-align:center;
 
 <canvas id="particleCanvas"></canvas>
 
-<audio id="loveSound" preload="auto">
-    <source src="oyunses.m4a" type="audio/mp4">
+<audio id="voice">
+    <source src="sesim.m4a" type="audio/mp4">
 </audio>
 
 <audio id="song">
@@ -399,7 +393,7 @@ let intervalStarted=false;
 
 /* START */
 function startExperience(){
-    voice.play();
+    voice.play().catch(()=>{});
     voice.onended=()=>{
         document.getElementById("songBtn").classList.remove("hidden");
     }
@@ -583,7 +577,7 @@ function startHold(){
     }, 80);
 
 blowSound.currentTime = 0;
-blowSound.play();
+blowSound.play().catch(()=>{});
 }
 
 function stopHold(){
@@ -636,15 +630,19 @@ function blowCandles(){
 blowSound.pause();
 blowSound.currentTime = 0;
 }
-document.body.addEventListener("touchstart", unlockAudio, { once:true });
+function unlockAudioIOS(){
+    const audios = [voice, song, blowSound];
 
-function unlockAudio(){
-    const a = document.getElementById("loveSound");
-    a.play().then(()=>{
-        a.pause();
-        a.currentTime = 0;
-    }).catch(()=>{});
+    audios.forEach(a=>{
+        a.play().then(()=>{
+            a.pause();
+            a.currentTime = 0;
+        }).catch(()=>{});
+    });
 }
+
+// iPhone için ilk dokunuşta aç
+document.body.addEventListener("touchstart", unlockAudioIOS, { once:true });
 </script>
 
 </body>
